@@ -1,0 +1,194 @@
+<%- include('includes/header') %>
+
+    <link rel="stylesheet" type="text/css" href="/css/products.css" />
+
+    <body>
+        <div class="products-container">
+            <div class="navigation-menu">
+                <ul class="nav justify-content-center">
+                    <li class="nav-item" style="cursor: pointer">
+                        <a class="nav-link active" href="/admin/">Home</a>
+                    </li>
+                    <li class="nav-item" style="cursor: pointer">
+                        <a class="nav-link" href="/admin/product/all">Products</a>
+                    </li>
+                    <li class="nav-item" style="cursor: pointer">
+                        <a class="nav-link" href="/admin/user/all">Customers</a>
+                    </li>
+                    <li class="nav-item" style="cursor: pointer" onclick="return confirm('Do you want to logout?')">
+                        <a class="nav-link" href="/admin/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="product-menu-frame">
+                <div class="board">
+                    <div class="product-table">
+                        <span class="new-product-txt" style="margin-bottom: 30px">
+                            SKINCARE PRODUCTS
+                        </span>
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-light">
+                                <tr class="thead-light">
+                                    <th scope="col">No</th>
+                                    <th scope="col">Product Name</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Size</th>
+                                    <th scope="col">Brand</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Stock</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+
+                            <% products.map(function(value, key){ %>
+                                <tbody style="background: white">
+                                    <td>
+                                        <%= key + 1 %>
+                                    </td>
+                                    <td>
+                                        <%= value.productName %>
+                                    </td>
+                                    <td>
+                                        <%= value.productCollection %>
+                                    </td>
+                                    <td>
+                                        <%= value.productSize %>
+                                    </td>
+                                    <td>
+                                        <%= value.productBrand || '-' %>
+                                    </td>
+                                    <td>$
+                                        <%= value.productPrice %>
+                                    </td>
+                                    <td>
+                                        <%= value.productLeftCount %>
+                                    </td>
+                                    <td>
+                                        <select class="spec-select new-product-status" id="<%= value._id %>">
+                                            <option value="PAUSE" <%= value.productStatus === 'PAUSE' ? 'selected': '' %>>PAUSE</option>
+                                            <option value="PROCESS" <%= value.productStatus === 'PROCESS' ? 'selected': '' %>>PROCESS</option>
+                                            <option value="DELETE" <%= value.productStatus === 'DELETE' ? 'selected': '' %>>DELETE</option>
+                                        </select>
+                                    </td>
+                                </tbody>
+                                <% }) %>
+
+                        </table>
+                        <div class="long-input" style="align-items: flex-end; margin-bottom: 25px">
+                            <button class="btn btn-primary" id="process-btn">
+                                New Product
+                            </button>
+                        </div>
+                    </div>
+                    <form onsubmit="return validateForm()" action="/admin/product/create" method="POST" class="product-form-container" enctype="multipart/form-data">
+                        <div class="long-input" style="display: flex; align-items: center">
+                            <span class="new-product-txt">NEW SKINCARE PRODUCT</span>
+                        </div>
+                        <div class="login-input-frame">
+                            <div class="long-input">
+                                <label>Product Name</label>
+                                <input type="text" placeholder="e.g. Hydrating Face Cream" name="productName" class="product-name" />
+                            </div>
+                            <input name="productStatus" value="PAUSE" class="product-status" hidden />
+                        </div>
+                        <div class="half-input-frame">
+                            <div class="half-input">
+                                <label>Price ($)</label>
+                                <input type="number" placeholder="Price" name="productPrice" class="product-price" />
+                            </div>
+                            <div class="half-input">
+                                <label>Stock Count</label>
+                                <input type="number" placeholder="Count" name="productLeftCount" class="product-left-count" />
+                            </div>
+                        </div>
+                        <div class="half-input-frame">
+                            <div class="half-input">
+                                <label>Category</label>
+                                <select class="product-collection" name="productCollection">
+                                    <option value="CLEANSER" selected>Cleanser</option>
+                                    <option value="MOISTURIZER">Moisturizer</option>
+                                    <option value="SERUM">Serum</option>
+                                    <option value="SUNSCREEN">Sunscreen</option>
+                                    <option value="MASK">Mask</option>
+                                    <option value="TONER">Toner</option>
+                                    <option value="BODY_CARE">Body Care</option>
+                                    <option value="OTHER">Other</option>
+                                </select>
+                            </div>
+                            <div class="half-input">
+                                <label>Size</label>
+                                <select class="product-size" name="productSize">
+                                    <option value="30ML">30ml</option>
+                                    <option value="50ML">50ml</option>
+                                    <option value="100ML" selected>100ml</option>
+                                    <option value="150ML">150ml</option>
+                                    <option value="5EA">5ea</option>
+                                    <option value="10EA">10ea</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="half-input-frame">
+                            <div class="half-input">
+                                <label>Brand</label>
+                                <input type="text" placeholder="e.g. CeraVe" name="productBrand" class="product-brand" />
+                            </div>
+                            <div class="half-input">
+                                <label>Skin Type</label>
+                                <select class="product-skin-type" name="productSkinType">
+                                    <option value="NORMAL" selected>Normal</option>
+                                    <option value="OILY">Oily</option>
+                                    <option value="DRY">Dry</option>
+                                    <option value="COMBINATION">Combination</option>
+                                    <option value="SENSITIVE">Sensitive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="long-input">
+                            <label>Ingredients</label>
+                            <textarea name="productIngredients" class="product-ingredients" placeholder="e.g. Hyaluronic Acid, Niacinamide, Ceramides..."></textarea>
+                        </div>
+                        <div class="long-input">
+                            <label>Product Description</label>
+                            <textarea name="productDesc" class="product-desc" placeholder="Describe the product benefits and usage..."></textarea>
+                        </div>
+
+                        <div class="img-frame">
+                            <label>Product Images</label>
+                            <div class="media-frame">
+                                <div class="upload-img-box">
+                                    <img src="/img/upload.svg" class="1" id="image-section-1" />
+                                    <input type="file" id="file" name="productImages" class="image-one" required onchange="previewFileHandler(this,1)" />
+                                </div>
+                                <div class="upload-img-box">
+                                    <img src="/img/upload.svg" class="2" id="image-section-2" />
+                                    <input type="file" id="file" name="productImages" class="image-two" onchange="previewFileHandler(this,2)" />
+                                </div>
+                                <div class="upload-img-box">
+                                    <img src="/img/upload.svg" class="3" id="image-section-3" />
+                                    <input type="file" id="file" name="productImages" class="image-three" onchange="previewFileHandler(this,3)" />
+                                </div>
+                                <div class="upload-img-box">
+                                    <img src="/img/upload.svg" class="4" id="image-section-4" />
+                                    <input type="file" id="file" name="productImages" class="image-four" onchange="previewFileHandler(this,4)" />
+                                </div>
+                                <div class="upload-img-box">
+                                    <img src="/img/upload.svg" class="5" id="image-section-5" />
+                                    <input type="file" id="file" name="productImages" class="image-five" onchange="previewFileHandler(this,5)" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="operation-buttons">
+                            <button class="btn btn-danger" id="cancel-btn">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="create-btn">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/js/products.js"></script>
+    </body>
+
+    <%- include('includes/footer') %>
