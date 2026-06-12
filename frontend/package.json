@@ -35,6 +35,7 @@
         "start": "vite",
         "dev": "vite",
         "build": "tsc -b && vite build",
+        "start:prod": "serve -s build -l 80",
         "preview": "vite preview",
         "typecheck": "tsc --noEmit"
     },
