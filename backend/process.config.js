@@ -1,7 +1,7 @@
 module.exports = {
     apps: [{
         name: "GLOWHARI",
-        cwd: "./",
+        cwd: __dirname,
         script: "./dist/server.js",
         watch: false,
         env_production: {

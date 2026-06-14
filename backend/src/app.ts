@@ -22,7 +22,7 @@ const store = new MongoDbStore({
 /** 1-Entrance **/
 const app = express();
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/uploads", express.static("./uploads"));
+app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cors({
